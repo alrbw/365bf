@@ -1,106 +1,89 @@
-// script.js
-
-// Mảng ánh xạ số tháng sang tên viết tắt tiếng Anh (JAN, FEB...)
+// Cấu hình mảng tháng để khớp với tên file ảnh (1JAN, 2FEB...)
 const monthAbbrs = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
-// Lấy các element từ HTML
+// Khai báo các thành phần giao diện
 const datePicker = document.getElementById('birth-date-picker');
 const flowerOriginal = document.getElementById('flower-original');
-const flowerZoomed = document.getElementById('flower-zoomed');
 const placeholderText = document.getElementById('placeholder-text');
 const imageFrame = document.getElementById('image-frame');
-const zoomPreviewContainer = document.getElementById('zoom-preview-container');
+const zoomPreview = document.getElementById('zoom-preview');
+const flowerInfo = document.getElementById('flower-info');
+const flowerNameEl = document.getElementById('flower-name');
+const flowerMeaningEl = document.getElementById('flower-meaning');
 
-// Lắng nghe sự kiện khi người dùng thay đổi ngày
+// Xử lý khi chọn ngày
 datePicker.addEventListener('change', function() {
-    const selectedDateStr = this.value; // Dạng YYYY-MM-DD
+    const selectedDateStr = this.value; // Định dạng YYYY-MM-DD từ input
 
     if (selectedDateStr) {
-        // Tạo đối tượng Date từ chuỗi
         const dateObj = new Date(selectedDateStr);
-        
-        // Lấy ngày và tháng (Lưu ý: getMonth() trả về từ 0-11)
         const day = dateObj.getDate();
         const monthIndex = dateObj.getMonth();
         
-        // 1. Tạo tên Folder Tháng (Dạng "01", "02", ..., "12")
-        const monthFolder = (monthIndex + 1).toString().padStart(2, '0');
-        
-        // 2. Tạo tên viết tắt của tháng (JAN, FEB...)
+        // 1. Tạo Key để lấy dữ liệu từ data.js (Định dạng DDMM)
+        const dayStr = day.toString().padStart(2, '0');
+        const monthStr = (monthIndex + 1).toString().padStart(2, '0');
+        const dataKey = `${dayStr}${monthStr}`;
+
+        // 2. Tạo đường dẫn ảnh (Định dạng: assets/365-B-Flower/03/19MAR.png)
         const monthAbbr = monthAbbrs[monthIndex];
-        
-        // 3. Tạo tên file ảnh (Dạng "19MAR.png")
         const fileName = `${day}${monthAbbr}.png`;
-        
-        // 4. Ghép đường dẫn hoàn chỉnh. GIẢ ĐỊNH folder là assets/365-B-Flower/
-        const imagePath = `assets/365-B-Flower/${monthFolder}/${fileName}`;
-        
-        // 5. Cập nhật giao diện
-        // Ẩn ảnh cũ để tránh hiệu ứng "giật"
+        const imagePath = `assets/365-B-Flower/${monthStr}/${fileName}`;
+
+        // 3. Cập nhật trạng thái chờ load
         flowerOriginal.classList.add('hidden');
-        zoomPreviewContainer.classList.add('hidden'); // Ẩn preview nếu có
+        zoomPreview.classList.add('hidden');
+        flowerInfo.classList.add('hidden');
         placeholderText.classList.remove('hidden');
-        placeholderText.textContent = "Searching for your flower...";
+        placeholderText.textContent = "Loading your flower...";
 
-        // Cập nhật đường dẫn ảnh mới cho cả ảnh gốc và ảnh phóng to
+        // 4. Gán nguồn ảnh
         flowerOriginal.src = imagePath;
-        flowerZoomed.src = imagePath; // Dùng chung 1 ảnh để phóng to
+        zoomPreview.style.backgroundImage = `url(${imagePath})`;
 
-        // Xử lý sự kiện load ảnh thành công
+        // Khi ảnh load thành công
         flowerOriginal.onload = function() {
             flowerOriginal.classList.remove('hidden');
             placeholderText.classList.add('hidden');
-            // Cập nhật URL nền cho container phóng to để hiệu ứng mượt hơn
-            zoomPreviewContainer.style.backgroundImage = `url(${imagePath})`;
+
+            // Hiển thị thông tin Tên & Ý nghĩa từ file data.js
+            if (typeof flowerData !== 'undefined' && flowerData[dataKey]) {
+                flowerNameEl.textContent = flowerData[dataKey].name;
+                flowerMeaningEl.textContent = flowerData[dataKey].meaning;
+                flowerInfo.classList.remove('hidden');
+            }
         };
 
-        // Xử lý sự kiện load ảnh lỗi (quan trọng khi test local)
+        // Khi ảnh lỗi
         flowerOriginal.onerror = function() {
+            placeholderText.textContent = "Image not found for this date.";
             flowerOriginal.classList.add('hidden');
-            placeholderText.classList.remove('hidden');
-            placeholderText.textContent = "Error: Flower image not found.";
-            zoomPreviewContainer.classList.add('hidden');
+            flowerInfo.classList.add('hidden');
         };
-
-    } else {
-        // Nếu xóa ngày, quay lại trạng thái placeholder
-        flowerOriginal.classList.add('hidden');
-        placeholderText.classList.remove('hidden');
-        placeholderText.textContent = "Select a date to see your flower";
-        zoomPreviewContainer.classList.add('hidden');
     }
 });
 
-// --- LOGIC XỬ LÝ HIỆU ỨNG PHÓNG TO (ZOOM) DẠNG AMAZON ---
+// --- HIỆU ỨNG ZOOM DẠNG AMAZON ---
 
-// Khi di chuột VÀO khung ảnh
-imageFrame.addEventListener('mouseenter', function() {
-    // Chỉ hiển thị preview khi đã có ảnh hoa được load
-    if (!flowerOriginal.classList.contains('hidden')) {
-        zoomPreviewContainer.classList.remove('hidden');
-    }
-});
-
-// Khi di chuột TRONG khung ảnh
 imageFrame.addEventListener('mousemove', function(e) {
-    if (zoomPreviewContainer.classList.contains('hidden')) return;
+    // Chỉ chạy khi đã có ảnh hoa hiển thị
+    if (flowerOriginal.classList.contains('hidden')) return;
 
-    // Lấy vị trí chuột trong khung ảnh
+    zoomPreview.classList.remove('hidden');
+
     const rect = imageFrame.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Tính phần trăm vị trí chuột
+    // Tính toán tỷ lệ vị trí chuột (%)
     const xPercent = (x / rect.width) * 100;
     const yPercent = (y / rect.height) * 100;
 
-    // Di chuyển background-image của ô preview để tạo hiệu ứng phóng to theo trỏ chuột
-    // 200% là độ phóng to, bạn có thể tăng giảm
-    zoomPreviewContainer.style.backgroundSize = "200%"; 
-    zoomPreviewContainer.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
+    // Phóng to 250% và di chuyển background theo chuột
+    zoomPreview.style.backgroundSize = "250%"; 
+    zoomPreview.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
 });
 
-// Khi di chuột RA KHỎI khung ảnh
 imageFrame.addEventListener('mouseleave', function() {
-    zoomPreviewContainer.classList.add('hidden');
+    zoomPreview.classList.add('hidden');
 });
