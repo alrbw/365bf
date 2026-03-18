@@ -1,0 +1,121 @@
+/* style.css */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.main-container {
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 400px;
+}
+
+.main-title {
+    font-size: 24px;
+    color: #2d3436;
+    margin-bottom: 25px;
+}
+
+.control-panel {
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.input-label {
+    font-weight: 600;
+    color: #636e72;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.date-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #dfe6e9;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.date-input:focus {
+    border-color: #74b9ff;
+    outline: none;
+}
+
+.image-frame {
+    width: 300px;
+    height: 300px;
+    border: 6px solid #f1f2f6;
+    border-radius: 50%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: crosshair;
+}
+
+.flower-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.placeholder-text {
+    color: #b2bec3;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* HIỆU ỨNG ZOOM */
+.zoom-preview-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    z-index: 10;
+    pointer-events: none; /* Cho phép chuột đi xuyên qua để hover vào frame */
+    border: 2px solid white;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* THÔNG TIN HOA */
+.flower-info {
+    margin-top: 25px;
+    animation: fadeIn 0.8s ease;
+}
+
+.flower-name {
+    font-weight: bold; /* In đậm tên hoa */
+    font-size: 22px;
+    color: #2d3436;
+    margin: 0;
+}
+
+.flower-meaning {
+    font-style: italic; /* In nghiêng meaning */
+    color: #a4a4a4;      /* Màu mờ mờ */
+    font-size: 15px;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.hidden { display: none !important; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

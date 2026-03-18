@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birth Flower Finder - Custom POD</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="main-title">Select Your Birth Date</h1>
+        
+        <div class="control-panel">
+            <label for="birth-date-picker" class="input-label">Date of Birth:</label>
+            <input type="date" id="birth-date-picker" class="date-input">
+        </div>
+
+        <div class="preview-area">
+            <div id="image-frame" class="image-frame">
+                <img id="flower-original" src="" alt="Flower Preview" class="flower-image hidden">
+                <p id="placeholder-text" class="placeholder-text">Your birth flower will appear here.</p>
+                
+                <div id="zoom-preview-container" class="zoom-preview-container hidden"></div>
+            </div>
+        </div>
+
+        <div id="flower-info" class="flower-info hidden">
+            <h3 id="flower-name" class="flower-name"></h3>
+            <p id="flower-meaning" class="flower-meaning"></p>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
