@@ -108,3 +108,23 @@ body {
 .flower-zoomed-image {
     display: none; /* Chúng ta dùng background-image, không dùng thẻ <img> trực tiếp */
 }
+.flower-info {
+    margin-top: 20px;
+    transition: all 0.5s ease;
+}
+
+.flower-name {
+    font-weight: bold;      /* In đậm tên hoa */
+    font-size: 20px;
+    color: #333;
+    margin: 5px 0;
+}
+
+.flower-meaning {
+    font-style: italic;     /* In nghiêng meaning */
+    color: #888;            /* Màu mờ (xám) */
+    font-size: 14px;
+    line-height: 1.4;
+    max-width: 300px;
+    margin: 0 auto;
+}
