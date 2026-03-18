@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birth Flower Selection - 365 Days</title>
+    <title>Birth Flower Finder | Custom POD</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,16 +17,20 @@
 
         <div class="preview-area">
             <div id="image-frame" class="image-frame">
-                <img id="flower-original" src="" alt="Select a date to see your flower" class="flower-image hidden">
+                <img id="flower-original" src="" alt="Select a date" class="flower-image hidden">
                 <p id="placeholder-text" class="placeholder-text">Your birth flower will appear here.</p>
                 
-                <div id="zoom-preview-container" class="zoom-preview-container hidden">
-                    <img id="flower-zoomed" src="" alt="Zoom Preview" class="flower-zoomed-image">
-                </div>
+                <div id="zoom-preview" class="zoom-preview hidden"></div>
             </div>
-            </div>
+        </div>
+
+        <div id="flower-info" class="flower-info hidden">
+            <h3 id="flower-name" class="flower-name"></h3>
+            <p id="flower-meaning" class="flower-meaning"></p>
+        </div>
     </div>
 
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
